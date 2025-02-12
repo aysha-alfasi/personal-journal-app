@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const session = require("express-session");
+const flash = require('connect-flash');
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 require("dotenv").config();
@@ -43,6 +44,8 @@ app.use(
     },
   })
 );
+
+app.use(flash());
 
 // <♡ passport />
 passport.use(
@@ -107,7 +110,7 @@ app.get("/contents/:userId", async (req, res) => {
   
   // <♡ Registeration />
   app.post("/register", async (req, res) => {
-    const { username, email, password } = req.body;
+    const { username, email, password } = req.body.id;
   
     const hashedPassword = await bcrypt.hash(password, 10);
   
