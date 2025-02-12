@@ -1,14 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { setUser, logout } from "./redux/slices/userSlice";
-import {
-  setContents,
-  addContent,
-  updateContent,
-  deleteContent,
-} from "./redux/slices/contentSlice";
-import { useNavigate } from "react-router-dom";
+import { setUser } from "./redux/slices/userSlice";
+import { useAuth } from './hooks/useAuth';
+import { useContent } from "./hooks/useContent";
+import { setContents } from "./redux/slices/contentSlice";
 import Login from "./components/Auth/Login";
 import UserProfile from "./components/the-user-profile/UserProfile";
 import ContentForm from "./components/journal/ContentForm";
@@ -18,16 +14,9 @@ function App() {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
   const { contents } = useSelector((state) => state.contents);
+  const { username, password, email, registering, setUsername, setPassword, setEmail, setRegistering, handleLogin, handleRegister, handleLogout } = useAuth();
+  const { title, content_field, mood, editing, setTitle, setContent_field, setMood, setEditing, handleSubmit, handleEdit, handleDelete } = useContent();
 
-  const [title, setTitle] = useState("");
-  const [content_field, setContent_field] = useState("");
-  const [mood, setMood] = useState("");
-  const [editing, setEditing] = useState(null);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
-  const [registering, setRegistering] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -58,100 +47,18 @@ function App() {
 
   // <♡> Handle user registration <♡>
 
-  const handleRegister = (e) => {
-    e.preventDefault();
-    axios
-      .post("http://localhost:5000/register", { username, email, password })
-      .then((response) => {
-        console.log("User registered:", response.data);
-        dispatch(setUser(response.data)); // ♡> Set logged-in user data
-        setUsername("");
-        setEmail("");
-        setPassword("");
-        setRegistering(false); // ♡> Switch to login form after successful registration
-      })
-      .catch((error) => {
-        console.error("Registration failed", error);
-      });
-  };
 
   // <♡> handle login <♡>
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    axios
-      .post(
-        "http://localhost:5000/login",
-        { username, password },
-        { withCredentials: true }
-      )
-      .then((response) => {
-        dispatch(setUser(response.data)); //♡ > Set logged-in user data
-        setUsername("");
-        setPassword("");
-      })
-      .catch((error) => {
-        console.error("Login failed", error);
-      });
-  };
 
   // <♡> handle logout <♡>
 
-  const handleLogout = () => {
-    console.log("Logout request received");
-    axios
-      .get("http://localhost:5000/logout", { withCredentials: true })
-      .then(() => {
-        dispatch(logout()); //♡ > Reset user state to indicate the user is logged out
-        navigate("/login");
-      })
-      .catch((error) => {
-        console.error("Logout failed", error);
-      });
-  };
 
   // <♡> handle add contnet <♡>
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const newEntry = { title, content_field, mood };
 
-    if (editing) {
-      axios
-        .put(`http://localhost:5000/contents/${editing}`, newEntry, {
-          withCredentials: true,
-        })
-        .then((response) => {
-          dispatch(updateContent(response.data));
-          resetForm();
-        })
-        .catch((error) => {
-          console.error("Error editing entry", error);
-        });
-    } else {
-      //♡ > Send a POST request to the backend to add the new journal
-      axios
-        .post("http://localhost:5000/contents", newEntry, {
-          withCredentials: true,
-        })
-        .then((response) => {
-          dispatch(addContent(response.data));
-          resetForm();
-        })
-        .catch((error) => {
-          console.error("Error submitting entry", error);
-        });
-    }
-  };
 
   // <♡> Handle edit content <♡>
-
-  const handleEdit = (content) => {
-    setTitle(content.title);
-    setContent_field(content.content_field);
-    setMood(content.mood);
-    setEditing(content.id); //♡ > Set the content being edited
-  };
 
   // <♡> Reset the form and stop editing <♡>
 
@@ -164,25 +71,6 @@ function App() {
 
   // <♡> Handle delete content <♡>
 
-  const handleDelete = (id) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this content?"
-    );
-    if (confirmDelete) {
-      // ♡> Make DELETE request to backend
-      axios
-        .delete(`http://localhost:5000/contents/${id}`, {
-          withCredentials: true,
-        })
-        .then(() => {
-          // ♡> Update the front-end
-          dispatch(deleteContent(id));
-        })
-        .catch((error) => {
-          console.error("Error deleting entry", error);
-        });
-    }
-  };
 
   return (
     <div>
