@@ -84,7 +84,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 //  <♡> PostgreSQL connection <♡>
-
 const pool = new Pool({
   user: process.env.PG_USER,
   host: process.env.PG_HOST,
@@ -93,8 +92,15 @@ const pool = new Pool({
   port: process.env.PG_PORT,
 });
 
-// <♡> API Endpoints <♡>
+pool.query("SELECT NOW()", (err, res) => {
+  if (err) {
+    console.error("Database connection error:", err);
+  } else {
+    console.log("Database connected:", res.rows);
+  }
+});
 
+// <♡> API Endpoints <♡>
 app.get("/contents/:userId", async (req, res) => {
   const userId = req.params.userId; //♡ > Get userId from the URL
   try {
@@ -164,6 +170,27 @@ app.get("/profile", (req, res) => {
   });
 });
 
+// <♡ JournalDetails />
+app.get("/contents/:id", (req, res) => {
+  const contentId = req.params.id;
+
+  pool.query(
+    "SELECT * FROM contents WHERE id = $1",
+    [contentId],
+    (err, result) => {
+      if (err) {
+        console.error("Error fetching content:", err);
+        return res.status(500).json({ error: "Failed to fetch content" });
+      }
+      if (result.rows.length > 0) {
+        res.json(result.rows[0]);
+      } else {
+        res.status(404).json({ error: "Content not found" });
+      }
+    }
+  );
+});
+
 // <♡ logout />
 app.get("/logout", (req, res) => {
   req.logout((err) => {
@@ -198,11 +225,21 @@ app.put("/contents/:id", async (req, res) => {
   const { title, content_field, mood } = req.body;
   const { id } = req.params;
 
-  const result = await pool.query(
-    "UPDATE contents SET title = $1, content_field = $2, mood = $3 WHERE id = $4 RETURNING *",
-    [title, content_field, mood, id]
-  );
-  res.json(result.rows[0]); // Return the updated entry
+  try {
+    const result = await pool.query(
+      "UPDATE contents SET title = $1, content_field = $2, mood = $3 WHERE id = $4 RETURNING *",
+      [title, content_field, mood, id]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: "Content not found." });
+    }
+
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error("Error updating content:", error);
+    res.status(500).json({ message: "Failed to update content." });
+  }
 });
 
 // <♡ Delete />

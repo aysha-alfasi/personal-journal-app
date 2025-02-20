@@ -1,36 +1,34 @@
 // hooks/useContent.js
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   addContent,
   updateContent,
   deleteContent,
+  setEditing,
 } from "../redux/slices/contentSlice";
 import axios from "axios";
 
 export function useContent() {
   const dispatch = useDispatch();
+  const { editing } = useSelector((state) => state.contents); // احصل على الـ editing من Redux
   const [title, setTitle] = useState("");
   const [content_field, setContent_field] = useState("");
   const [mood, setMood] = useState("");
-  const [editing, setEditing] = useState(null);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const newEntry = { title, content_field, mood };
-
+  const handleSubmit = async (updatedContent) => {
     try {
       if (editing) {
         const response = await axios.put(
           `http://localhost:5000/contents/${editing}`,
-          newEntry,
+          updatedContent,
           { withCredentials: true }
         );
         dispatch(updateContent(response.data));
       } else {
         const response = await axios.post(
           "http://localhost:5000/contents",
-          newEntry,
+          updatedContent,
           { withCredentials: true }
         );
         dispatch(addContent(response.data));
@@ -41,7 +39,7 @@ export function useContent() {
       setTitle("");
       setContent_field("");
       setMood("");
-      setEditing(null);
+      dispatch(setEditing(null));
     }
   };
 
@@ -50,6 +48,7 @@ export function useContent() {
     setContent_field(content.content_field);
     setMood(content.mood);
     setEditing(content.id);
+    dispatch(setEditing(content.id));
   };
 
   const handleDelete = async (id) => {

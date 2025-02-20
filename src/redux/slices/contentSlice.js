@@ -1,11 +1,15 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   contents: [],
+  title: "",
+  content_field: "",
+  mood: "",
+  editing: null,
 };
 
 const contentSlice = createSlice({
-  name: 'contents',
+  name: "contents",
   initialState,
   reducers: {
     setContents: (state, action) => {
@@ -21,11 +25,42 @@ const contentSlice = createSlice({
       state.contents = updatedContents;
     },
     deleteContent: (state, action) => {
-      state.contents = state.contents.filter((content) => content.id !== action.payload);
+      state.contents = state.contents.filter(
+        (content) => content.id !== action.payload
+      );
+    },
+    setTitle: (state, action) => {
+      state.title = action.payload;
+    },
+    setContent_field: (state, action) => {
+      state.content_field = action.payload;
+    },
+    setMood: (state, action) => {
+      state.mood = action.payload;
+    },
+    setEditing: (state, action) => {
+      state.editing = action.payload;
+    },
+
+    resetForm: (state) => {
+      state.title = "";
+      state.content_field = "";
+      state.mood = "";
+      state.editing = null;
     },
   },
 });
 
-export const { setContents, addContent, updateContent, deleteContent } = contentSlice.actions;
+export const {
+  setContents,
+  addContent,
+  updateContent,
+  deleteContent,
+  setTitle,
+  setContent_field,
+  setMood,
+  setEditing,
+  resetForm,
+} = contentSlice.actions;
 
 export default contentSlice.reducer;

@@ -1,4 +1,6 @@
 import React from "react";
+import { Button } from "antd";
+import "./Login.css";
 
 function Login({
   isRegistering,
@@ -10,10 +12,11 @@ function Login({
   toggleForm,
 }) {
   return (
-    <div>
-      <h2>{isRegistering ? "Register" : "Login"}</h2>
-      <form onSubmit={handleSubmit}>
+    <div className="wrapper">
+      {/* <h2>{isRegistering ? "Register" : "Login to Start"}</h2> */}
+      <form className="login-form" onSubmit={handleSubmit}>
         <input
+          className="custom-input"
           type="text"
           value={username}
           onChange={handleChange("username")}
@@ -22,6 +25,7 @@ function Login({
         />
         {isRegistering && (
           <input
+            className="custom-input"
             type="text"
             value={email}
             onChange={handleChange("email")}
@@ -30,19 +34,22 @@ function Login({
           />
         )}
         <input
+          className="custom-input"
           type="password"
           value={password}
           onChange={handleChange("password")}
           placeholder="Password"
           required
         />
-        <button type="submit">{isRegistering ? "Register" : "Login"}</button>
+        <Button className="custom-button" htmlType="submit">
+          {isRegistering ? "Register" : "Login"}
+        </Button>
       </form>
-      <button onClick={toggleForm}>
+      <Button className="link-button" onClick={toggleForm}>
         {isRegistering
           ? "Already have an account? Login"
           : "Don't have an account? Register"}
-      </button>
+      </Button>
     </div>
   );
 }

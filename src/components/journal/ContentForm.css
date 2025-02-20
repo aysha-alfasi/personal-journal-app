@@ -1,0 +1,130 @@
+.add-content-wr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: "Itim", serif;
+  font-weight: 400;
+  font-size: 1.5rem;
+  color: #2e2c2c;
+  background-image: url(/public/imgs/rect2.png);
+  background-repeat: repeat;
+  border-radius: 10px;
+  margin-bottom: 2%;
+  padding-left: 2%;
+  padding-right: 2%;
+}
+
+.add-content-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding-bottom: 3%;
+  padding-top: 10%;
+}
+
+.content-input {
+  width: 400px;
+  height: 300px !important;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.title-input {
+  width: 400px;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.title-input:focus,
+.content-input:focus,
+.title-input:hover,
+.content-input:hover {
+  border-color: lightpink;
+}
+
+.custom-select .ant-select-selector {
+  border-color: rgb(246, 171, 213) !important;
+  background-color: #ffe9f4 !important;
+}
+
+.ant-select-item-option {
+  background-color: #f4fff5;
+}
+
+.ant-select-item-option:hover {
+  background-color: #ffeaf6 !important;
+}
+
+.ant-select-item-option-selected {
+  background-color: #fbd9ff !important;
+}
+
+.add-content-wr h2 {
+  text-align: center;
+  font-family: "Amatic SC";
+  font-weight: 300;
+  font-size: 3rem;
+  line-height: 50px;
+  color: #4a4747;
+}
+
+.sm {
+  margin-top: 2%;
+  font-size: 1.8rem;
+  font-family: "Annie Use Your Telescope";
+  color: #555252;
+}
+
+.select-reminder {
+  margin: 0;
+  font-size: 1.1rem;
+  font-family: "Itim";
+  color: rgb(95, 89, 89);
+}
+
+.select-submit {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  margin-bottom: 10%;
+}
+
+@media (max-width: 768px) {
+  .content-input,
+  .title-input {
+    width: 90%;
+    font-size: 14px;
+  }
+
+  .content-input {
+    height: 200px !important;
+  }
+
+  .add-content-form {
+    padding-top: 5%;
+    gap: 15px;
+  }
+}
+
+@media (max-width: 400px) {
+  .content-input,
+  .title-input {
+    width: 95%;
+    font-size: 12px;
+    padding: 6px;
+  }
+
+  .content-input {
+    height: 180px !important;
+  }
+
+  .add-content-form {
+    padding-top: 3%;
+    gap: 10px;
+  }
+}

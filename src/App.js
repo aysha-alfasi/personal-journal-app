@@ -1,22 +1,56 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "./redux/slices/userSlice";
-import { useAuth } from './hooks/useAuth';
+import { useAuth } from "./hooks/useAuth";
 import { useContent } from "./hooks/useContent";
 import { setContents } from "./redux/slices/contentSlice";
+import {
+  Routes,
+  Route,
+} from "react-router-dom";
 import Login from "./components/Auth/Login";
-import UserProfile from "./components/the-user-profile/UserProfile";
-import ContentForm from "./components/journal/ContentForm";
 import ContentList from "./components/journal/ContentList";
+import ContentForm from "./components/journal/ContentForm";
+import ContentDetails from "./components/journal/ContentDetails";
+import PrivateRoute from "./components/Auth/PrivateRoute";
+import ProfilePage from "./components/journal/ProfilePage";
+import UserProfile from "./components/the-user-profile/UserProfile";
+
+import "./App.css";
 
 function App() {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
   const { contents } = useSelector((state) => state.contents);
-  const { username, password, email, registering, setUsername, setPassword, setEmail, setRegistering, handleLogin, handleRegister, handleLogout } = useAuth();
-  const { title, content_field, mood, editing, setTitle, setContent_field, setMood, setEditing, handleSubmit, handleEdit, handleDelete } = useContent();
+  const [loading, setLoading] = useState(true);
 
+  const {
+    username,
+    password,
+    email,
+    registering,
+    setUsername,
+    setPassword,
+    setEmail,
+    setRegistering,
+    handleLogin,
+    handleRegister,
+    handleLogout,
+  } = useAuth();
+  const {
+    title,
+    content_field,
+    mood,
+    editing,
+    setTitle,
+    setContent_field,
+    setMood,
+    setEditing,
+    handleSubmit,
+    handleEdit,
+    handleDelete,
+  } = useContent();
 
   useEffect(() => {
     axios
@@ -27,6 +61,9 @@ function App() {
       .catch((error) => {
         console.log("Not logged in");
         dispatch(setUser(null)); // ♡> No user logged in
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, [dispatch]);
 
@@ -45,21 +82,6 @@ function App() {
     }
   }, [user, dispatch]);
 
-  // <♡> Handle user registration <♡>
-
-
-  // <♡> handle login <♡>
-
-
-  // <♡> handle logout <♡>
-
-
-  // <♡> handle add contnet <♡>
-
-
-
-  // <♡> Handle edit content <♡>
-
   // <♡> Reset the form and stop editing <♡>
 
   const resetForm = () => {
@@ -69,48 +91,89 @@ function App() {
     setEditing(null);
   };
 
-  // <♡> Handle delete content <♡>
-
+  if (loading) {
+    return <div>جارٍ التحميل...</div>;
+  }
 
   return (
-    <div>
-      <h1>Journal Contents</h1>
-      {/* ♡ Show login or registration form  ♡ */}
-      {!user ? (
-        <Login
-          isRegistering={registering}
-          handleSubmit={registering ? handleRegister : handleLogin}
-          handleChange={(field) => (e) => {
-            if (field === "username") setUsername(e.target.value);
-            if (field === "email") setEmail(e.target.value);
-            if (field === "password") setPassword(e.target.value);
-          }}
-          username={username}
-          email={email}
-          password={password}
-          toggleForm={() => setRegistering(!registering)}
+    <div className="App">
+      <UserProfile user={user} handleLogout={handleLogout} />
+      <Routes>
+        {/* ♡ Show login or registration form  ♡ */}
+        <Route
+          path="/"
+          element={
+            !user ? (
+              <Login
+                isRegistering={registering}
+                handleSubmit={registering ? handleRegister : handleLogin}
+                handleChange={(field) => (e) => {
+                  if (field === "username") setUsername(e.target.value);
+                  if (field === "email") setEmail(e.target.value);
+                  if (field === "password") setPassword(e.target.value);
+                }}
+                username={username}
+                email={email}
+                password={password}
+                toggleForm={() => setRegistering(!registering)}
+              />
+            ) : (
+              <ProfilePage />
+            )
+          }
         />
-      ) : (
-        <div>
-          <UserProfile user={user} handleLogout={handleLogout} />
-          <ContentForm
-            title={title}
-            content_field={content_field}
-            mood={mood}
-            setTitle={setTitle}
-            setContentField={setContent_field}
-            setMood={setMood}
-            handleSubmit={handleSubmit}
-            editing={editing}
-            resetForm={resetForm}
-          />
-          <ContentList
-            contents={contents}
-            handleEdit={handleEdit}
-            handleDelete={handleDelete}
-          />
-        </div>
-      )}
+
+        <Route
+          path="/content-form"
+          element={
+            <PrivateRoute
+              element={
+                <ContentForm
+                  user={user}
+                  handleLogout={handleLogout}
+                  title={title}
+                  content_field={content_field}
+                  mood={mood}
+                  setTitle={setTitle}
+                  setContent_field={setContent_field}
+                  setMood={setMood}
+                  handleSubmit={handleSubmit}
+                  handleEdit={handleEdit}
+                  editing={editing}
+                  resetForm={resetForm}
+                />
+              }
+              user={user}
+            />
+          }
+        />
+
+        <Route
+          path="/content-list"
+          element={
+            <PrivateRoute
+              element={
+                <ContentList
+                  contents={contents}
+                  handleSubmit={handleSubmit}
+                  handleDelete={handleDelete}
+                />
+              }
+              user={user}
+            />
+          }
+        />
+
+        <Route
+          path="/content-list/:id"
+          element={
+            <PrivateRoute
+              element={<ContentDetails contents={contents} />}
+              user={user}
+            />
+          }
+        />
+      </Routes>
     </div>
   );
 }

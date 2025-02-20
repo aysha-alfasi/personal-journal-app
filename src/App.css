@@ -1,0 +1,9 @@
+.App {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: "Itim", serif;
+  font-weight: 400;
+  font-size: 2rem;
+  color: #2e2c2c;
+}
