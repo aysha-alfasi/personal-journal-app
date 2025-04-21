@@ -16,4 +16,21 @@
 .home-btns-wr {
   display: flex;
   gap: 10px;
+  justify-content: center;
+}
+
+.chart-section {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+
+.chart-text {
+  text-align: center;
+  font-size: 1.4rem;
+  margin-top: 50px;
+  font-family: "Klee One";
+  color: #484848;
+  margin-bottom: 1px;
+  font-weight: 200;
 }

@@ -191,6 +191,22 @@ app.get("/contents/:id", (req, res) => {
   );
 });
 
+// <♡ MoodStatistics />
+app.get("/mood-statistics/:userId", async (req, res) => {
+  const userId = req.user?.id;
+
+  try {
+    const result = await pool.query(
+      "SELECT mood, COUNT(*) AS count FROM contents WHERE user_id = $1 GROUP BY mood",
+      [userId]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Error fetching mood statistics", err);
+    res.status(500).send("Error fetching mood statistics");
+  }
+});
+
 // <♡ logout />
 app.get("/logout", (req, res) => {
   req.logout((err) => {

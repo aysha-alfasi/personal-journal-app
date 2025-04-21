@@ -1,3 +1,28 @@
+.all-page-items {
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
+}
+
+.app-info-title h3 {
+  font-family: "Klee One";
+  color: #5b5959;
+  font-size: 1.8rem;
+  font-weight: 200;
+  text-align: center;
+  margin-top: 50px;
+}
+
+.app-info-title p {
+  font-size: 1.7rem;
+  text-align: justify;
+  font-family: "Annie Use Your Telescope";
+  color: #5b5959;
+  font-weight: 100;
+  margin-top: 5px;
+  line-height: 1.5;
+}
+
 .wrapper {
   display: flex;
   flex-direction: column;
@@ -19,27 +44,31 @@
   align-items: center;
   gap: 20px;
   padding: 40px;
-  border-radius: 10px;
-  background-color: #ffdceeaa;
+  border-radius: 16px;
+  background-size: cover;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  background-color: #ffeff9;
+  border: #d4d0d0 solid 0.1px;
 }
 
 .custom-input {
   width: 300px;
   padding: 8px;
   font-size: 16px;
-  border: 1px solid #ccc;
+  border: 1px solid #adadad;
   border-radius: 5px;
+  background-color: #fafcf0 !important;
 }
 
 .custom-button {
-  background-color: #ffbad3;
-  color: rgba(46, 46, 46, 0.819);
+  background-color: rgb(255, 150, 206);
+  color: #2e2c2c !important;
   padding: 10px 20px;
   border-radius: 5px;
-  border: none;
-  font-family: "Itim", serif;
+  font-family: "Klee One";
   font-size: 1.2rem;
   font-weight: 200;
+  border-color: #585656;
 }
 
 .link-button {
@@ -48,16 +77,105 @@
   border: none;
   background-color: #ffffff00;
   box-shadow: none;
-  font-family: "Itim", serif;
+  font-family: "Klee One";
   font-size: 1.2rem;
   font-weight: 200;
 }
 
 .custom-button:hover {
   color: #2e2c2c !important;
+  border: #2e2c2c solid 0.3px !important;
+  background-color: #ffedfa !important;
 }
 
 .link-button:hover {
-  color: #ffbad3 !important;
+  color: rgb(255, 155, 208) !important;
   background-color: #ffffff00 !important;
+}
+
+.last-section {
+  display: flex;
+  flex-direction: row;
+  gap: 140px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.start-btn {
+  margin-top: 40px;
+  width: 150px;
+  padding: 20px 15px;
+  background-color: #fed3ff;
+  border-color: #585656;
+  font-family: "Klee One";
+  transition: ease-in-out 3s;
+}
+
+.start-btn:hover {
+  background-color: #ffe1ec;
+  border: 1px solid #adadad !important;
+  color: #2e2c2c !important;
+}
+
+@media screen and (max-width: 768px) {
+  .all-page-items {
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .last-section {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1px;
+    margin-top: 30px;
+  }
+
+  .last-section p {
+    text-align: center;
+  }
+
+  .start-btn {
+    margin-top: -5px;
+    margin-bottom: 50px;
+  }
+}
+
+@media (max-width: 450px) {
+  .last-section p {
+    font-size: 1.5rem;
+  }
+
+  .login-form {
+    width: 310px;
+  }
+}
+
+@media (max-width: 400px) {
+  .login-form {
+    width: 280px;
+  }
+
+  .last-section p {
+    font-size: 1.4rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .login-form {
+    width: 270px;
+  }
+
+  .last-section p {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 344px) {
+  .login-form {
+    width: 250px;
+  }
+  .last-section p {
+    font-size: 1.2rem;
+  }
 }

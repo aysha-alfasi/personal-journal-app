@@ -5,10 +5,8 @@ import { setUser } from "./redux/slices/userSlice";
 import { useAuth } from "./hooks/useAuth";
 import { useContent } from "./hooks/useContent";
 import { setContents } from "./redux/slices/contentSlice";
-import {
-  Routes,
-  Route,
-} from "react-router-dom";
+import { setMoodStats } from "./redux/slices/moodStatsSlice";
+import { Routes, Route } from "react-router-dom";
 import Login from "./components/Auth/Login";
 import ContentList from "./components/journal/ContentList";
 import ContentForm from "./components/journal/ContentForm";
@@ -82,6 +80,21 @@ function App() {
     }
   }, [user, dispatch]);
 
+  useEffect(() => {
+    if (user) {
+      axios
+        .get(`http://localhost:5000/mood-statistics/${user.id}`, {
+          withCredentials: true,
+        })
+        .then((res) => {
+          dispatch(setMoodStats(res.data));
+        })
+        .catch((err) => {
+          console.error("Error fetching mood stats", err);
+        });
+    }
+  }, [user, dispatch]);
+
   // <♡> Reset the form and stop editing <♡>
 
   const resetForm = () => {
@@ -104,21 +117,25 @@ function App() {
           path="/"
           element={
             !user ? (
-              <Login
-                isRegistering={registering}
-                handleSubmit={registering ? handleRegister : handleLogin}
-                handleChange={(field) => (e) => {
-                  if (field === "username") setUsername(e.target.value);
-                  if (field === "email") setEmail(e.target.value);
-                  if (field === "password") setPassword(e.target.value);
-                }}
-                username={username}
-                email={email}
-                password={password}
-                toggleForm={() => setRegistering(!registering)}
-              />
+              <div>
+                <Login
+                  isRegistering={registering}
+                  handleSubmit={registering ? handleRegister : handleLogin}
+                  handleChange={(field) => (e) => {
+                    if (field === "username") setUsername(e.target.value);
+                    if (field === "email") setEmail(e.target.value);
+                    if (field === "password") setPassword(e.target.value);
+                  }}
+                  username={username}
+                  email={email}
+                  password={password}
+                  toggleForm={() => setRegistering(!registering)}
+                />
+              </div>
             ) : (
-              <ProfilePage />
+              <div>
+                <ProfilePage />
+              </div>
             )
           }
         />
