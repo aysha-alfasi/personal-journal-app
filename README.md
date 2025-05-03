@@ -1,7 +1,6 @@
 # Personal Journal App < ♥/>
 
-My project is a cozy React journaling web application using Ant Design for UI 🌸.  
-Users can register, log in, and start writing down their thoughts with a mood attached 💭💗.
+My project is a cute react full-stack web Application for journaling.✨
 
 ## visual overview 🍓  
 
