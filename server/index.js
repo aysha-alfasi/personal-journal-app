@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 // <♡ cors />
 app.use(
   cors({
-    origin: "http://localhost:3000", // ♡> React front-end URL
+    origin: "personal-journal-app-eight.vercel.app", // ♡> React front-end URL
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
   })
