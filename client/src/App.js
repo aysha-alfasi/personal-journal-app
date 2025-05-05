@@ -13,6 +13,7 @@ import ContentForm from "./components/journal/ContentForm";
 import ContentDetails from "./components/journal/ContentDetails";
 import PrivateRoute from "./components/Auth/PrivateRoute";
 import ProfilePage from "./components/journal/ProfilePage";
+import MoodChart from "./components/mood-chart/MoodChart";
 import UserProfile from "./components/the-user-profile/UserProfile";
 
 import "./App.css";
@@ -21,7 +22,33 @@ function App() {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
   const { contents } = useSelector((state) => state.contents);
+  const moodStats = useSelector((state) => state.moodStats);
   const [loading, setLoading] = useState(true);
+
+
+  const fetchMoodStatsEdit = () => {
+    if (user) {
+      axios
+        .get(`http://localhost:5000/mood-statistics/${user.id}`, {
+          withCredentials: true,
+        })
+        .then((response) => {
+          dispatch(setMoodStats(response.data));
+        })
+        .catch((err) => {
+          console.error("Error fetching mood stats", err);
+        });
+    }
+  };
+  
+
+  useEffect(() => {
+    if (user) {
+      fetchMoodStatsEdit();
+    }
+  }, [user]);
+  
+
 
   const {
     username,
@@ -48,7 +75,7 @@ function App() {
     handleSubmit,
     handleEdit,
     handleDelete,
-  } = useContent();
+  } = useContent(fetchMoodStatsEdit);
 
   useEffect(() => {
     axios
@@ -80,20 +107,8 @@ function App() {
     }
   }, [user, dispatch]);
 
-  useEffect(() => {
-    if (user) {
-      axios
-        .get(`http://localhost:5000/mood-statistics/${user.id}`, {
-          withCredentials: true,
-        })
-        .then((res) => {
-          dispatch(setMoodStats(res.data));
-        })
-        .catch((err) => {
-          console.error("Error fetching mood stats", err);
-        });
-    }
-  }, [user, dispatch]);
+
+
 
   // <♡> Reset the form and stop editing <♡>
 
@@ -107,6 +122,7 @@ function App() {
   if (loading) {
     return <div>جارٍ التحميل...</div>;
   }
+  
 
   return (
     <div className="App">
@@ -135,6 +151,7 @@ function App() {
             ) : (
               <div>
                 <ProfilePage />
+                {moodStats && moodStats.length > 0 && <MoodChart isDemo={false} />}
               </div>
             )
           }
@@ -158,6 +175,7 @@ function App() {
                   handleEdit={handleEdit}
                   editing={editing}
                   resetForm={resetForm}
+               /*    refreshMoodStats={fetchMoodStats}  */
                 />
               }
               user={user}

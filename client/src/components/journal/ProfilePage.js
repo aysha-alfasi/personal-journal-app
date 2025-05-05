@@ -17,7 +17,7 @@ function ProfilePage() {
       </div>
       <div className="chart-section">
         <h3 className="chart-text">Explore your daily feelings here.✨</h3>
-        <MoodChart isDemo={false} />
+        {/* <MoodChart isDemo={false} /> */}
       </div>
     </>
   );

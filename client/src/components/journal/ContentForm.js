@@ -15,6 +15,7 @@ function ContentForm({
   handleSubmit,
   resetForm,
   editing,
+  /* refreshMoodStats, */
 }) {
   const navigate = useNavigate();
 
@@ -33,6 +34,10 @@ function ContentForm({
     console.log("Updated Content before submit:", updatedContent);
 
     await handleSubmit(updatedContent);
+
+   /*  if (refreshMoodStats) {
+      refreshMoodStats();
+    } */
 
     if (editing) {
       message.success("Edited!");

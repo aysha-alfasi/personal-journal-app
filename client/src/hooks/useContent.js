@@ -9,7 +9,7 @@ import {
 } from "../redux/slices/contentSlice";
 import axios from "axios";
 
-export function useContent() {
+export function useContent(refreshMoodStats) {
   const dispatch = useDispatch();
   const { editing } = useSelector((state) => state.contents); // احصل على الـ editing من Redux
   const [title, setTitle] = useState("");
@@ -25,6 +25,9 @@ export function useContent() {
           { withCredentials: true }
         );
         dispatch(updateContent(response.data));
+        if (refreshMoodStats) {
+          refreshMoodStats();
+        }
       } else {
         const response = await axios.post(
           "http://localhost:5000/contents",
@@ -32,6 +35,9 @@ export function useContent() {
           { withCredentials: true }
         );
         dispatch(addContent(response.data));
+        if (refreshMoodStats) {
+          refreshMoodStats();
+        }
       }
     } catch (error) {
       console.error("Error submitting entry", error);
@@ -61,6 +67,9 @@ export function useContent() {
           withCredentials: true,
         });
         dispatch(deleteContent(id));
+        if (refreshMoodStats) {
+          refreshMoodStats(); 
+        }
       } catch (error) {
         console.error("Error deleting entry", error);
       }
