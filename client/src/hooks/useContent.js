@@ -11,7 +11,7 @@ import axios from "axios";
 
 export function useContent(refreshMoodStats) {
   const dispatch = useDispatch();
-  const { editing } = useSelector((state) => state.contents); // احصل على الـ editing من Redux
+  const { editing } = useSelector((state) => state.contents);
   const [title, setTitle] = useState("");
   const [content_field, setContent_field] = useState("");
   const [mood, setMood] = useState("");
@@ -20,7 +20,7 @@ export function useContent(refreshMoodStats) {
     try {
       if (editing) {
         const response = await axios.put(
-          `http://localhost:5000/contents/${editing}`,
+          `https://personal-journal-app-w1o3.onrender.com/contents/${editing}`,
           updatedContent,
           { withCredentials: true }
         );
@@ -30,7 +30,7 @@ export function useContent(refreshMoodStats) {
         }
       } else {
         const response = await axios.post(
-          "http://localhost:5000/contents",
+          "https://personal-journal-app-w1o3.onrender.com/contents",
           updatedContent,
           { withCredentials: true }
         );
@@ -63,7 +63,7 @@ export function useContent(refreshMoodStats) {
     );
     if (confirmDelete) {
       try {
-        await axios.delete(`http://localhost:5000/contents/${id}`, {
+        await axios.delete(`https://personal-journal-app-w1o3.onrender.com/contents/${id}`, {
           withCredentials: true,
         });
         dispatch(deleteContent(id));

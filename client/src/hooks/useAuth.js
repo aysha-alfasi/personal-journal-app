@@ -15,7 +15,7 @@ export function useAuth() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:5000/login",
+        "https://personal-journal-app-w1o3.onrender.com/login",
         { username, password },
         { withCredentials: true }
       );
@@ -30,7 +30,7 @@ export function useAuth() {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/register", {
+      const response = await axios.post("https://personal-journal-app-w1o3.onrender.com/register", {
         username,
         email,
         password,
@@ -47,7 +47,7 @@ export function useAuth() {
 
   const handleLogout = async () => {
     try {
-      await axios.get("http://localhost:5000/logout", {
+      await axios.get("https://personal-journal-app-w1o3.onrender.com/logout", {
         withCredentials: true,
       });
       dispatch(logout());
