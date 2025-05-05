@@ -20,7 +20,7 @@ export function useContent(refreshMoodStats) {
     try {
       if (editing) {
         const response = await axios.put(
-          `https://personal-journal-app-w1o3.onrender.com/contents/${editing}`,
+          `${process.env.REACT_APP_API_BASE_URL}/contents/${editing}`,
           updatedContent,
           { withCredentials: true }
         );
@@ -30,7 +30,7 @@ export function useContent(refreshMoodStats) {
         }
       } else {
         const response = await axios.post(
-          "https://personal-journal-app-w1o3.onrender.com/contents",
+          `${process.env.REACT_APP_API_BASE_URL}/contents`,
           updatedContent,
           { withCredentials: true }
         );
@@ -63,7 +63,7 @@ export function useContent(refreshMoodStats) {
     );
     if (confirmDelete) {
       try {
-        await axios.delete(`https://personal-journal-app-w1o3.onrender.com/contents/${id}`, {
+        await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/contents/${id}`, {
           withCredentials: true,
         });
         dispatch(deleteContent(id));

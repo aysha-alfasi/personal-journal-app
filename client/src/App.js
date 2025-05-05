@@ -29,7 +29,7 @@ function App() {
   const fetchMoodStatsEdit = () => {
     if (user) {
       axios
-        .get(`https://personal-journal-app-w1o3.onrender.com/mood-statistics/${user.id}`, {
+        .get(`${process.env.REACT_APP_API_BASE_URL}/mood-statistics/${user.id}`, {
           withCredentials: true,
         })
         .then((response) => {
@@ -80,7 +80,7 @@ function App() {
 
   useEffect(() => {
     axios
-      .get("https://personal-journal-app-w1o3.onrender.com/profile", { withCredentials: true })
+      .get(`${process.env.REACT_APP_API_BASE_URL}/profile`, { withCredentials: true })
       .then((response) => {
         dispatch(setUser(response.data));
       })
@@ -96,7 +96,7 @@ function App() {
   useEffect(() => {
     if (user) {
       axios
-        .get(`https://personal-journal-app-w1o3.onrender.com/contents/${user.id}`, {
+        .get(`${process.env.REACT_APP_API_BASE_URL}/contents/${user.id}`, {
           withCredentials: true,
         })
         .then((response) => {
