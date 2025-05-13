@@ -43,17 +43,17 @@ const pool = new Pool({
 app.use(
   session({
     store: new pgSession({
-      pool: pool,          
-      tableName: "session", 
+      pool: pool, // نفس pool المستخدم في قاعدة البيانات
+      tableName: "session",
     }),
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: true,        
+      secure: true,
       httpOnly: true,
-      maxAge: 60 * 60 * 1000,
-      sameSite: "lax",
+      sameSite: "none",
+      maxAge: 1000 * 60 * 60 * 24 * 7,
     },
   })
 );
