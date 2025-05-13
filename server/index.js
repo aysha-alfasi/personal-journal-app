@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 // <♡ cors />
 app.use(
   cors({
-    origin: "http://localhost:3000", // ♡> React front-end URL
+    origin: "https://personal-journal-app-frontend.onrender.com", // ♡> React front-end URL
     credentials: true,
   })
 );
@@ -35,9 +35,9 @@ app.use(
   session({
     secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: {
-      secure: false,
+      secure: true,
       httpOnly: true,
       maxAge: 60 * 60 * 1000,
       sameSite: "lax",
@@ -85,7 +85,7 @@ app.use(passport.session());
 //  <♡> PostgreSQL connection <♡>
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: {
+ ssl: {
     rejectUnauthorized: false,
   },
 });
@@ -143,14 +143,18 @@ app.post("/register", async (req, res) => {
 });
 
 // <♡ login />
-app.post(
-  "/login",
-  passport.authenticate("local", {
-    successRedirect: "/profile",
-    failureRedirect: "/login",
-    failureFlash: true,
-  })
-);
+app.post("/login", (req, res, next) => {
+  passport.authenticate("local", (err, user, info) => {
+    if (err) return next(err);
+    if (!user) return res.status(401).json({ message: "Invalid credentials" });
+
+    req.logIn(user, (err) => {
+      if (err) return next(err);
+      console.log('User after login:', req.user);
+      return res.status(200).json(user); 
+    });
+  })(req, res, next);
+});
 
 // <♡ protected profile routes />
 app.get("/profile", (req, res) => {

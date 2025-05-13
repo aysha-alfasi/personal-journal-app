@@ -25,13 +25,15 @@ function App() {
   const moodStats = useSelector((state) => state.moodStats);
   const [loading, setLoading] = useState(true);
 
-
   const fetchMoodStatsEdit = () => {
     if (user) {
       axios
-        .get(`http://localhost:5000/mood-statistics/${user.id}`, {
-          withCredentials: true,
-        })
+        .get(
+          `https://personal-journal-app-w1o3.onrender.com/mood-statistics/${user.id}`,
+          {
+            withCredentials: true,
+          }
+        )
         .then((response) => {
           dispatch(setMoodStats(response.data));
         })
@@ -40,15 +42,12 @@ function App() {
         });
     }
   };
-  
 
   useEffect(() => {
     if (user) {
       fetchMoodStatsEdit();
     }
   }, [user]);
-  
-
 
   const {
     username,
@@ -78,26 +77,35 @@ function App() {
   } = useContent(fetchMoodStatsEdit);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/profile", { withCredentials: true })
-      .then((response) => {
-        dispatch(setUser(response.data));
-      })
-      .catch((error) => {
-        console.log("Not logged in");
-        dispatch(setUser(null)); // ♡> No user logged in
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    if (user) {
+      axios
+        .get("https://personal-journal-app-w1o3.onrender.com/profile", {
+          withCredentials: true,
+        })
+        .then((response) => {
+          dispatch(setUser(response.data));
+        })
+        .catch((error) => {
+          console.log("Not logged in");
+          dispatch(setUser(null)); // ♡> No user logged in
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } else {
+      setLoading(false);
+    }
   }, [dispatch]);
 
   useEffect(() => {
     if (user) {
       axios
-        .get(`http://localhost:5000/contents/${user.id}`, {
-          withCredentials: true,
-        })
+        .get(
+          `https://personal-journal-app-w1o3.onrender.com/contents/${user.id}`,
+          {
+            withCredentials: true,
+          }
+        )
         .then((response) => {
           dispatch(setContents(response.data)); // ♡> Set the content for the logged-in user
         })
@@ -106,9 +114,6 @@ function App() {
         });
     }
   }, [user, dispatch]);
-
-
-
 
   // <♡> Reset the form and stop editing <♡>
 
@@ -122,7 +127,6 @@ function App() {
   if (loading) {
     return <div>جارٍ التحميل...</div>;
   }
-  
 
   return (
     <div className="App">
@@ -151,7 +155,9 @@ function App() {
             ) : (
               <div>
                 <ProfilePage />
-                {moodStats && moodStats.length > 0 && <MoodChart isDemo={false} />}
+                {moodStats && moodStats.length > 0 && (
+                  <MoodChart isDemo={false} />
+                )}
               </div>
             )
           }
@@ -175,7 +181,7 @@ function App() {
                   handleEdit={handleEdit}
                   editing={editing}
                   resetForm={resetForm}
-               /*    refreshMoodStats={fetchMoodStats}  */
+                  /*    refreshMoodStats={fetchMoodStats}  */
                 />
               }
               user={user}
