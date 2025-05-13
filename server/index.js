@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const session = require("express-session");
+const pgSession = require("connect-pg-simple")(session); 
 const flash = require("connect-flash");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
@@ -33,11 +34,15 @@ app.use(cookieParser());
 // <♡ express-session />
 app.use(
   session({
+    store: new pgSession({
+      pool: pool,          
+      tableName: "session", 
+    }),
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: true,
+      secure: true,        
       httpOnly: true,
       maxAge: 60 * 60 * 1000,
       sameSite: "lax",
