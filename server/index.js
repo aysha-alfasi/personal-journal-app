@@ -31,6 +31,14 @@ app.use(
 // <♡ cookie-parser />
 app.use(cookieParser());
 
+//  <♡> PostgreSQL connection <♡>
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+ ssl: {
+    rejectUnauthorized: false,
+  },
+});
+
 // <♡ express-session />
 app.use(
   session({
@@ -87,13 +95,6 @@ passport.deserializeUser(async (id, cb) => {
 app.use(passport.initialize());
 app.use(passport.session());
 
-//  <♡> PostgreSQL connection <♡>
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
- ssl: {
-    rejectUnauthorized: false,
-  },
-});
 
 pool.query("SELECT NOW()", (err, res) => {
   if (err) {
